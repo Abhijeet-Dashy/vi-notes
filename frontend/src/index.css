@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-vibe-bg: #110a05;
+  --color-vibe-card: #1c1008;
+  --color-vibe-border: #332115;
+  --color-vibe-accent: #d97706;
+  --color-vibe-accent-hover: #b45309;
+  --color-vibe-text: #f5e6d3;
+  --color-vibe-muted: #a89483;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-vibe-bg);
+  color: var(--color-vibe-text);
+  min-height: 100vh;
+}
