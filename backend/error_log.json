@@ -1,0 +1,4 @@
+{
+  "message": "next is not a function",
+  "stack": "TypeError: next is not a function\n    at model.<anonymous> (file:///C:/Users/abhij/Downloads/vi-notes/backend/src/models/user.model.js:55:62)\n    at Kareem.execPre (C:\\Users\\abhij\\Downloads\\vi-notes\\backend\\node_modules\\kareem\\index.js:68:39)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"
+}

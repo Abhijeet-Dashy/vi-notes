@@ -23,8 +23,27 @@ const userSchema = new mongoose.Schema(
 
     password: {
       type: String,
-      required: [true, "Password is required"],
+      required: [
+        function () {
+          return this.authProvider === "local";
+        },
+        "Password is required",
+      ],
       minlength: [6, "Password must be at least 6 characters"],
+    },
+    authProvider: {
+      type: String,
+      enum: ["local", "google"],
+      default: "local",
+    },
+    googleId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+    profilePicture: {
+      type: String,
+      default: "",
     },
   },
   {
@@ -32,8 +51,8 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return;
+userSchema.pre("save", async function () {
+  if (!this.isModified("password") || !this.password) return;
 
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);

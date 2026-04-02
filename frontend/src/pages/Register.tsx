@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { User, Mail, Lock, UserPlus } from "lucide-react";
+import { GoogleLogin } from "@react-oauth/google";
+import type { CredentialResponse } from "@react-oauth/google";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 
@@ -29,6 +31,26 @@ export const Register: React.FC = () => {
       setError(err.response?.data?.message || "Failed to register");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+    setError("");
+    try {
+      const response = await axios.post("/api/auth/google", {
+        token: credentialResponse.credential,
+      });
+      if (response.data.success) {
+        if (response.data.token) {
+          localStorage.setItem("token", response.data.token);
+        }
+        if (response.data.user && response.data.user.username) {
+          localStorage.setItem("username", response.data.user.username);
+        }
+        navigate("/dashboard");
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Google sign-up failed");
     }
   };
 
@@ -90,6 +112,24 @@ export const Register: React.FC = () => {
             </Button>
           </div>
         </form>
+
+        <div className="flex items-center gap-3 my-6">
+          <div className="flex-1 h-px bg-vibe-border"></div>
+          <span className="text-vibe-muted text-xs uppercase tracking-wider">or</span>
+          <div className="flex-1 h-px bg-vibe-border"></div>
+        </div>
+
+        <div className="flex justify-center [&>div]:w-full">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => setError("Google sign-up failed")}
+            theme="filled_black"
+            size="large"
+            width={380}
+            text="continue_with"
+            shape="pill"
+          />
+        </div>
 
         <div className="mt-8 text-center text-sm text-vibe-muted">
           <p>
